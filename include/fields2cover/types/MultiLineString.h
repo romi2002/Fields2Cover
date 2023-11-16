@@ -8,71 +8,77 @@
 #ifndef FIELDS2COVER_TYPES_MULTILINESTRING_H_
 #define FIELDS2COVER_TYPES_MULTILINESTRING_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 #include <utility>
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/LineString.h"
 
 namespace f2c::types {
 
-struct MultiLineString :
-    public Geometries<MultiLineString, OGRMultiLineString,
-            wkbMultiLineString, LineString> {
- public:
-  using Geometries<MultiLineString, OGRMultiLineString,
+  struct MultiLineString :
+          public Geometries<MultiLineString, OGRMultiLineString,
+                  wkbMultiLineString, LineString> {
+  public:
+    using Geometries<MultiLineString, OGRMultiLineString,
             wkbMultiLineString, LineString>::Geometries;
-  MultiLineString();
-  explicit MultiLineString(const OGRGeometry* geom);
-  explicit MultiLineString(const LineString& line);
-  explicit MultiLineString(const std::initializer_list<LineString>& ls);
 
-  size_t size() const;
+    MultiLineString();
 
-  double getLength() const;
+    explicit MultiLineString(const OGRGeometry *geom);
 
-  void operator*=(double b);
+    explicit MultiLineString(const LineString &line);
 
-  void getGeometry(size_t i, LineString& line);
+    explicit MultiLineString(const std::initializer_list<LineString> &ls);
 
-  void getGeometry(size_t i, LineString& line) const;
+    size_t size() const;
 
-  LineString getGeometry(size_t i);
+    double getLength() const;
 
-  const LineString getGeometry(size_t i) const;
+    void operator*=(double b);
 
-  void setGeometry(size_t i, const LineString& line);
+    void getGeometry(size_t i, LineString &line);
 
-  void append(const OGRGeometry* geom);
+    void getGeometry(size_t i, LineString &line) const;
 
-  void addGeometry(const LineString& line);
-  void addGeometry(const MultiLineString& lines);
+    LineString getGeometry(size_t i);
 
-  static MultiLineString getLineSegments(const LineString& line);
-  static MultiLineString getLineSegments(const LinearRing& line);
+    const LineString getGeometry(size_t i) const;
 
-  template <class T, OGRwkbGeometryType R>
-  MultiLineString Intersection(const Geometry<T, R>& g) const;
+    void setGeometry(size_t i, const LineString &line);
 
-  template <class T, OGRwkbGeometryType R>
-  static MultiLineString Intersection(
-      const LineString& line, const Geometry<T, R>& g);
-};
+    void append(const OGRGeometry *geom);
 
+    void addGeometry(const LineString &line);
 
-template <class T, OGRwkbGeometryType R>
-MultiLineString MultiLineString::Intersection(const Geometry<T, R>& g) const {
-  auto inter = data->Intersection(g.get());
-  f2c::types::MultiLineString lines(inter);
-  OGRGeometryFactory::destroyGeometry(inter);
-  return lines;
-}
+    void addGeometry(const MultiLineString &lines);
+
+    static MultiLineString getLineSegments(const LineString &line);
+
+    static MultiLineString getLineSegments(const LinearRing &line);
+
+    template<class T, OGRwkbGeometryType R>
+    MultiLineString Intersection(const Geometry<T, R> &g) const;
+
+    template<class T, OGRwkbGeometryType R>
+    static MultiLineString Intersection(
+            const LineString &line, const Geometry<T, R> &g);
+  };
 
 
-template <class T, OGRwkbGeometryType R>
-MultiLineString MultiLineString::Intersection(
-    const LineString& line, const Geometry<T, R>& g) {
-  return std::move(MultiLineString(line.get()).Intersection(g));
-}
+  template<class T, OGRwkbGeometryType R>
+  MultiLineString MultiLineString::Intersection(const Geometry<T, R> &g) const {
+    auto inter = data->Intersection(g.get());
+    f2c::types::MultiLineString lines(inter);
+    OGRGeometryFactory::destroyGeometry(inter);
+    return lines;
+  }
+
+
+  template<class T, OGRwkbGeometryType R>
+  MultiLineString MultiLineString::Intersection(
+          const LineString &line, const Geometry<T, R> &g) {
+    return std::move(MultiLineString(line.get()).Intersection(g));
+  }
 
 
 }  // namespace f2c::types

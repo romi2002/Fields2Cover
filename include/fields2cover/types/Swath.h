@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_SWATH_H_
 #define FIELDS2COVER_TYPES_SWATH_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 
 #include <algorithm>
 #include <memory>
@@ -18,86 +18,110 @@
 
 namespace f2c::types {
 
-enum class SwathType {MAINLAND = 0, HEADLAND = 1};
+  enum class SwathType {
+    MAINLAND = 0, HEADLAND = 1
+  };
 
-struct Swath {
- public:
-  Swath();
-  explicit Swath(const LineString& path);
-  explicit Swath(double width);
-  Swath(const LineString& path, double width,
-      int id = 0, SwathType type = SwathType::MAINLAND);
-  Swath(const Swath&);
-  virtual ~Swath();
-  virtual Swath& operator=(Swath&&);
-  virtual Swath& operator=(const Swath&);
-  bool operator!=(const Swath& s) const;
-  bool operator==(const Swath& s) const;
-  bool operator>=(const Swath& s) const;
-  bool operator<=(const Swath& s) const;
-  bool operator>(const Swath& s) const;
-  bool operator<(const Swath& s) const;
+  struct Swath {
+  public:
+    Swath();
 
- public:
-  void setId(int id);
-  int getId() const;
+    explicit Swath(const LineString &path);
 
-  void setPath(const LineString& path);
-  LineString getPath() const;
+    explicit Swath(double width);
 
-  void setWidth(double width);
-  double getWidth() const;
+    Swath(const LineString &path, double width,
+          int id = 0, SwathType type = SwathType::MAINLAND);
 
-  bool getCreationDir() const;
-  void setCreationDir(bool creation_dir);
+    Swath(const Swath &);
 
-  SwathType getType() const;
-  void setType(SwathType type);
+    virtual ~Swath();
 
- public:
-  double getLength() const;
+    virtual Swath &operator=(Swath &&);
 
-  double getArea() const;
-  double getArea(const Cells& polys) const;
+    virtual Swath &operator=(const Swath &);
 
-  void reverse();
+    bool operator!=(const Swath &s) const;
 
-  double getInAngle() const;
+    bool operator==(const Swath &s) const;
 
-  double getOutAngle() const;
+    bool operator>=(const Swath &s) const;
 
-  Point startPoint() const;
+    bool operator<=(const Swath &s) const;
 
-  Point endPoint() const;
+    bool operator>(const Swath &s) const;
 
-  Cells computeAreaCovered() const;
-  Cells computeAreaCovered(const Cells& polys) const;
-  Swath clone() const;
+    bool operator<(const Swath &s) const;
 
-  size_t getNumPoints() const;
+  public:
+    void setId(int id);
 
-  Point getPoint(int i);
-  const Point getPoint(int i) const;
+    int getId() const;
+
+    void setPath(const LineString &path);
+
+    LineString getPath() const;
+
+    void setWidth(double width);
+
+    double getWidth() const;
+
+    bool getCreationDir() const;
+
+    void setCreationDir(bool creation_dir);
+
+    SwathType getType() const;
+
+    void setType(SwathType type);
+
+  public:
+    double getLength() const;
+
+    double getArea() const;
+
+    double getArea(const Cells &polys) const;
+
+    void reverse();
+
+    double getInAngle() const;
+
+    double getOutAngle() const;
+
+    Point startPoint() const;
+
+    Point endPoint() const;
+
+    Cells computeAreaCovered() const;
+
+    Cells computeAreaCovered(const Cells &polys) const;
+
+    Swath clone() const;
+
+    size_t getNumPoints() const;
+
+    Point getPoint(int i);
+
+    const Point getPoint(int i) const;
 
 
-  /// Check if the difference between swaths angles is less than pi.
-  bool hasSameDir(const Swath& s) const;
+    /// Check if the difference between swaths angles is less than pi.
+    bool hasSameDir(const Swath &s) const;
 
-  /// Reverse the direction of the swath if the difference of the angles is
-  /// greater than pi
-  void targetSameDirAs(const Swath& s);
+    /// Reverse the direction of the swath if the difference of the angles is
+    /// greater than pi
+    void targetSameDirAs(const Swath &s);
 
-  /// Reverse the direction of the swath if the difference of the angles is
-  /// less than pi
-  void targetOppositeDirAs(const Swath& s);
+    /// Reverse the direction of the swath if the difference of the angles is
+    /// less than pi
+    void targetOppositeDirAs(const Swath &s);
 
- private:
-  int id_ {0};  // Id of the swath
-  LineString path_;
-  double width_ {0.0};
-  bool creation_dir_ {true};
-  SwathType type_ {SwathType::MAINLAND};
-};
+  private:
+    int id_{0};  // Id of the swath
+    LineString path_;
+    double width_{0.0};
+    bool creation_dir_{true};
+    SwathType type_{SwathType::MAINLAND};
+  };
 
 
 }  // namespace f2c::types

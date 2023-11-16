@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_ROUTE_H_
 #define FIELDS2COVER_TYPES_ROUTE_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 #include <vector>
 #include <numeric>
 #include "fields2cover/types/Swath.h"
@@ -18,23 +18,27 @@
 
 namespace f2c::types {
 
-enum RouteType { R_NONE = 0, R_START = 1, R_END = 2, R_START_END = 3};
+  enum RouteType {
+    R_NONE = 0, R_START = 1, R_END = 2, R_START_END = 3
+  };
 
-struct Route {
- public:
-  std::vector<Swaths> v_swaths;
-  std::vector<MultiPoint> connections;
-  RouteType type {RouteType::R_NONE};
+  struct Route {
+  public:
+    std::vector<Swaths> v_swaths;
+    std::vector<MultiPoint> connections;
+    RouteType type{RouteType::R_NONE};
 
- public:
-  double getLength() const;
+  public:
+    double getLength() const;
 
-  LineString getRouteAsLine() const;
+    LineString getRouteAsLine() const;
 
-  bool isValid() const;
-  bool isEmpty() const;
-  Route clone() const;
-};
+    bool isValid() const;
+
+    bool isEmpty() const;
+
+    Route clone() const;
+  };
 
 
 }  // namespace f2c::types

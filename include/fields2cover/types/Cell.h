@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_CELL_H_
 #define FIELDS2COVER_TYPES_CELL_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 #include <string>
 #include <boost/math/constants/constants.hpp>
 #include "fields2cover/types/Geometries.h"
@@ -20,80 +20,84 @@
 namespace f2c::types {
 
 // Function to concat string easily with numbers
-template < typename... Args >
-inline std::string sstr(Args &&... args) {
-  std::ostringstream sstr;
-  sstr << std::dec;
-  (sstr <<  ...  << args);
-  return sstr.str();
-}
+  template<typename... Args>
+  inline std::string sstr(Args &&... args) {
+    std::ostringstream sstr;
+    sstr << std::dec;
+    (sstr <<  ...  << args);
+    return sstr.str();
+  }
 
 
-struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
- public:
-  using Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing>::Geometries;
-  Cell();
-  explicit Cell(const OGRGeometry* geom);
+  struct Cell : public Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing> {
+  public:
+    using Geometries<Cell, OGRPolygon, wkbPolygon, LinearRing>::Geometries;
 
-  explicit Cell(const f2c::types::LinearRing& ring);
+    Cell();
 
-  void getGeometry(size_t i, LinearRing& ring);
+    explicit Cell(const OGRGeometry *geom);
 
-  void getGeometry(size_t i, LinearRing& ring) const;
+    explicit Cell(const f2c::types::LinearRing &ring);
 
-  LinearRing getGeometry(size_t i);
+    void getGeometry(size_t i, LinearRing &ring);
 
-  const LinearRing getGeometry(size_t i) const;
+    void getGeometry(size_t i, LinearRing &ring) const;
 
-  void setGeometry(size_t i, const LinearRing& ring);
+    LinearRing getGeometry(size_t i);
 
-  size_t size() const;
+    const LinearRing getGeometry(size_t i) const;
+
+    void setGeometry(size_t i, const LinearRing &ring);
+
+    size_t size() const;
 
 
-  /// Scale this Cell by a scale factor
-  void operator*=(double b);
+    /// Scale this Cell by a scale factor
+    void operator*=(double b);
 
-  static Cell Buffer(const Cell& geom, double width);
+    static Cell Buffer(const Cell &geom, double width);
 
-  static Cell Buffer(const LineString& geom, double width);
+    static Cell Buffer(const LineString &geom, double width);
 
-  static Cell Buffer(const LinearRing& ring, double width);
+    static Cell Buffer(const LinearRing &ring, double width);
 
-  static Cell Buffer(const Point& geom, double width);
+    static Cell Buffer(const Point &geom, double width);
 
-  Cell ConvexHull() const;
+    Cell ConvexHull() const;
 
-  void addRing(const LinearRing& ring);
-  void addGeometry(const LinearRing& ring);
+    void addRing(const LinearRing &ring);
 
-  const LinearRing getExteriorRing() const;
-  const LinearRing getInteriorRing(size_t i_ring) const;
+    void addGeometry(const LinearRing &ring);
 
-  /// Check if the Cell is convex
-  bool isConvex() const;
+    const LinearRing getExteriorRing() const;
 
-  /// Get a line that starts from a custom point with a custom angle.
-  /// If the point is in this geometry, the line crosses the border.
-  LineString getSemiLongCurve(const Point& point, double angle) const;
+    const LinearRing getInteriorRing(size_t i_ring) const;
 
-  /// Get a line that goes through a custom point with a custom angle.
-  /// If the point is in this geometry, the line also crosses it.
-  LineString getStraightLongCurve(const Point& point, double angle) const;
+    /// Check if the Cell is convex
+    bool isConvex() const;
 
-  /// Compute the sections of a LineString that is inside this Cell
-  MultiLineString getLinesInside(const LineString& line) const;
+    /// Get a line that starts from a custom point with a custom angle.
+    /// If the point is in this geometry, the line crosses the border.
+    LineString getSemiLongCurve(const Point &point, double angle) const;
 
-  /// Compute the sections of a MultiLineString that is inside this Cell
-  MultiLineString getLinesInside(const MultiLineString& lines) const;
+    /// Get a line that goes through a custom point with a custom angle.
+    /// If the point is in this geometry, the line also crosses it.
+    LineString getStraightLongCurve(const Point &point, double angle) const;
 
-  /// Check if a point is in the border of this Cell
-  bool isPointInBorder(const Point& p) const;
+    /// Compute the sections of a LineString that is inside this Cell
+    MultiLineString getLinesInside(const LineString &line) const;
 
-  bool isPointIn(const Point& p) const;
+    /// Compute the sections of a MultiLineString that is inside this Cell
+    MultiLineString getLinesInside(const MultiLineString &lines) const;
 
-  /// Generate a line from a point to the border of this Cell
-  LineString createLineUntilBorder(const Point& p, double ang) const;
-};
+    /// Check if a point is in the border of this Cell
+    bool isPointInBorder(const Point &p) const;
+
+    bool isPointIn(const Point &p) const;
+
+    /// Generate a line from a point to the border of this Cell
+    LineString createLineUntilBorder(const Point &p, double ang) const;
+  };
 
 }  // namespace f2c::types
 

@@ -8,7 +8,7 @@
 #ifndef FIELDS2COVER_TYPES_CELLS_H_
 #define FIELDS2COVER_TYPES_CELLS_H_
 
-#include <gdal/ogr_geometry.h>
+#include <ogr_geometry.h>
 #include "fields2cover/types/Geometry.h"
 #include "fields2cover/types/Geometries.h"
 #include "fields2cover/types/Point.h"
@@ -17,89 +17,95 @@
 
 namespace f2c::types {
 
-struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
-    Cell> {
- public:
-  using Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon, Cell>::Geometries;
-  Cells();
-  explicit Cells(const OGRGeometry* geom);
+  struct Cells : public Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon,
+          Cell> {
+  public:
+    using Geometries<Cells, OGRMultiPolygon, wkbMultiPolygon, Cell>::Geometries;
 
-  explicit Cells(const Cell& c);
+    Cells();
 
-  void operator*=(double b);
+    explicit Cells(const OGRGeometry *geom);
 
-  void addGeometry(const Cell& c);
-  void addRing(size_t i, const LinearRing& ring);
+    explicit Cells(const Cell &c);
 
-  size_t size() const;
+    void operator*=(double b);
 
-  void getGeometry(size_t i, Cell& cell);
-  void getGeometry(size_t i, Cell& cell) const;
+    void addGeometry(const Cell &c);
 
-  Cell getGeometry(size_t i);
+    void addRing(size_t i, const LinearRing &ring);
 
-  const Cell getGeometry(size_t i) const;
+    size_t size() const;
 
-  void setGeometry(size_t i, const Cell& cell);
+    void getGeometry(size_t i, Cell &cell);
 
-  const Cell getCell(size_t i) const;
+    void getGeometry(size_t i, Cell &cell) const;
 
-  const LinearRing getCellBorder(size_t i) const;
-  const LinearRing getInteriorRing(size_t i_cell, size_t i_ring) const;
+    Cell getGeometry(size_t i);
 
-  bool isConvex() const;
+    const Cell getGeometry(size_t i) const;
 
-  Cell ConvexHull() const;
+    void setGeometry(size_t i, const Cell &cell);
 
-  static Cells Intersection(const Cell& cell, const Cell& c);
-  Cells Intersection(const Cell& c) const;
-  Cells Intersection(const Cells& c) const;
+    const Cell getCell(size_t i) const;
 
-  Cells Difference(const Cells& c) const;
+    const LinearRing getCellBorder(size_t i) const;
 
-  Cells Union(const Cells& c) const;
+    const LinearRing getInteriorRing(size_t i_cell, size_t i_ring) const;
 
-  Cells UnionCascaded() const;
+    bool isConvex() const;
 
-  Cells splitByLine(const LineString& line) const;
+    Cell ConvexHull() const;
 
-  Cells splitByLine(const MultiLineString& lines) const;
+    static Cells Intersection(const Cell &cell, const Cell &c);
 
-  LineString getSemiLongCurve(const Point& point, double angle) const;
+    Cells Intersection(const Cell &c) const;
 
-  LineString getStraightLongCurve(const Point& point, double angle) const;
+    Cells Intersection(const Cells &c) const;
 
-  MultiLineString getLinesInside(const LineString& line) const;
+    Cells Difference(const Cells &c) const;
 
-  MultiLineString getLinesInside(const MultiLineString& lines) const;
+    Cells Union(const Cells &c) const;
 
-  Cells getCellsInside(const Cells& cell) const;
+    Cells UnionCascaded() const;
 
-  bool isPointInBorder(const Point& p) const;
+    Cells splitByLine(const LineString &line) const;
 
-  bool isPointIn(const Point& p) const;
+    Cells splitByLine(const MultiLineString &lines) const;
 
-  const Cell getCellWherePoint(const Point& p) const;
+    LineString getSemiLongCurve(const Point &point, double angle) const;
 
-  LineString createLineUntilBorder(
-      const f2c::types::Point& p, double ang) const;
+    LineString getStraightLongCurve(const Point &point, double angle) const;
 
-  template <class T, OGRwkbGeometryType R>
-  static Cells Buffer(const Geometry<T, R>& geom, double width,
-      int side = 0);
+    MultiLineString getLinesInside(const LineString &line) const;
 
-  Cells Buffer(double width) const;
-};
+    MultiLineString getLinesInside(const MultiLineString &lines) const;
+
+    Cells getCellsInside(const Cells &cell) const;
+
+    bool isPointInBorder(const Point &p) const;
+
+    bool isPointIn(const Point &p) const;
+
+    const Cell getCellWherePoint(const Point &p) const;
+
+    LineString createLineUntilBorder(
+            const f2c::types::Point &p, double ang) const;
+
+    template<class T, OGRwkbGeometryType R>
+    static Cells Buffer(const Geometry<T, R> &geom, double width,
+                        int side = 0);
+
+    Cells Buffer(double width) const;
+  };
 
 
-
-template <class T, OGRwkbGeometryType R>
-Cells Cells::Buffer(const Geometry<T, R>& geom, double width, int side) {
-  OGRGeometry* buffer = geom.OGRBuffer(width, side);
-  Cells cells {buffer};
-  OGRGeometryFactory::destroyGeometry(buffer);
-  return cells;
-}
+  template<class T, OGRwkbGeometryType R>
+  Cells Cells::Buffer(const Geometry<T, R> &geom, double width, int side) {
+    OGRGeometry *buffer = geom.OGRBuffer(width, side);
+    Cells cells{buffer};
+    OGRGeometryFactory::destroyGeometry(buffer);
+    return cells;
+  }
 
 
 }  // namespace f2c::types
