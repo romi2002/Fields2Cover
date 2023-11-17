@@ -18,9 +18,9 @@ set(PACKAGE_MAINTAINER "Gonzalo Mier")
 set(PACKAGE_URL "http://fields2cover.github.io")
 
 
-option(ALLOW_PARALLELIZATION "Allow parallel algorithms" ON)
+option(ALLOW_PARALLELIZATION "Allow parallel algorithms" OFF)
 option(BUILD_TUTORIALS "Build tutorials" ON)
-option(BUILD_TESTS "Build tests" ON)
+option(BUILD_TESTS "Build tests" OFF)
 option(BUILD_PYTHON "Build Python SWIG module" OFF)
 option(BUILD_DOC "Build Documentation" OFF)
 option(BUILD_SHARED_LIBS "Build shared library(.so)" ON)
@@ -104,7 +104,7 @@ FetchContent_MakeAvailable(
 
 find_package(GDAL CONFIG REQUIRED)
 find_package(geos REQUIRED)
-find_package(tbb REQUIRED)
+# find_package(tbb REQUIRED)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
@@ -203,9 +203,9 @@ target_link_libraries(Fields2Cover
         matplotlib_cpp
 )
 
-if (ALLOW_PARALLELIZATION)
-    target_link_libraries(Fields2Cover PRIVATE TBB::tbb)
-endif (ALLOW_PARALLELIZATION)
+# if (ALLOW_PARALLELIZATION)
+#     target_link_libraries(Fields2Cover PRIVATE TBB::tbb)
+# endif (ALLOW_PARALLELIZATION)
 
 set_target_properties(Fields2Cover
         PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE
